@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AuctionHub – Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse live auctions, bid on items and create your own listings on AuctionHub.">
+
+    <link rel="stylesheet" href="assets/css/common/base.css">
+    <link rel="stylesheet" href="assets/css/common/layout.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/pages/home.css">
+</head>
+<body>
+<div id="app">
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo" data-nav="home">AUCTIONHUB</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <ul>
+                    <li><a href="index.html" data-nav="home">Home</a></li>
+                    <li><a href="create-listing.html" data-nav="create">Create listing</a></li>
+                    <li><a href="profile.html" data-nav="profile">Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div id="userInfo" class="user-info hidden">
+                    <a href="profile.html" id="userName" class="user-name-link"></a>
+                    <span id="userCredits" class="credits"></span>
+                    <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                </div>
+
+                <div id="authActions" class="auth-actions">
+                    <a href="auth.html" id="loginLink" class="btn">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-card">
+                    <h1 class="hero-title">
+                        Discover amazing <span class="hero-highlight">auction deals</span>
+                    </h1>
+                    <p class="hero-text">
+                        Bid on thousands of items from electronics to collectibles. Find your next treasure today.
+                    </p>
+                    <form class="hero-search" onsubmit="return false;">
+                        <input
+                            id="heroSearchInput"
+                            type="search"
+                            placeholder="What are you looking for?"
+                            autocomplete="off"
+                        >
+                        <button type="button" id="heroSearchButton" class="btn">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Popular categories</h2>
+                <div class="category-grid">
+                    <button class="category-pill" data-category="electronics">
+                        <span class="category-emoji">💻</span>
+                        <span>Electronics</span>
+                    </button>
+                    <button class="category-pill" data-category="vehicles">
+                        <span class="category-emoji">🚗</span>
+                        <span>Vehicles</span>
+                    </button>
+                    <button class="category-pill" data-category="jewelry">
+                        <span class="category-emoji">💎</span>
+                        <span>Jewelry</span>
+                    </button>
+                    <button class="category-pill" data-category="home">
+                        <span class="category-emoji">🏠</span>
+                        <span>Home</span>
+                    </button>
+                    <button class="category-pill" data-category="art">
+                        <span class="category-emoji">🎨</span>
+                        <span>Art</span>
+                    </button>
+                    <button class="category-pill" data-category="fashion">
+                        <span class="category-emoji">👗</span>
+                        <span>Fashion</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="live-header">
+                    <div class="live-title-row">
+                        <h2 class="section-title">Live auctions</h2>
+                        <span id="activeCount" class="badge">0 active</span>
+                    </div>
+
+                    <div class="live-controls">
+                        <div class="live-search-group">
+                            <label for="searchInput">Search</label>
+                            <input
+                                id="searchInput"
+                                type="search"
+                                placeholder="Search listings"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <button id="resetFiltersBtn" class="btn btn-secondary">
+                            Reset filters
+                        </button>
+
+                        <select id="sortSelect" class="select">
+                            <option value="ending-soon">Sort: ending soon</option>
+                            <option value="newest">Sort: newest</option>
+                            <option value="oldest">Sort: oldest</option>
+                            <option value="title">Sort: title A–Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="loading" class="loading">Loading listings...</div>
+                <p id="noResults" class="no-results hidden">No listings found.</p>
+
+                <div id="listingGrid" class="listing-grid"></div>
+
+                <div class="load-more-wrapper">
+                    <button id="loadMoreBtn" class="btn">
+                        Load more auctions
+                    </button>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-block">
+                        <div id="statListings" class="stat-number">0</div>
+                        <div class="stat-label">Active listings</div>
+                    </div>
+                    <div class="stat-block">
+                        <div id="statBids" class="stat-number">0</div>
+                        <div class="stat-label">Total bids on shown items</div>
+                    </div>
+                    <div class="stat-block">
+                        <div id="statAvgBids" class="stat-number">0</div>
+                        <div class="stat-label">Average bids per listing</div>
+                    </div>
+                    <div class="stat-block">
+                        <div id="statUniqueSellers" class="stat-number">0</div>
+                        <div class="stat-label">Unique sellers</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h3 class="footer-title">AuctionHub</h3>
+                <p class="footer-text">
+                    The premier destination for online auctions. Buy and sell unique items with confidence.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">For Buyers</h4>
+                <ul class="footer-links">
+                    <li>How to Bid</li>
+                    <li>Payment Methods</li>
+                    <li>Shipping Info</li>
+                    <li>Returns</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">For Sellers</h4>
+                <ul class="footer-links">
+                    <li>Start Selling</li>
+                    <li>Seller Fees</li>
+                    <li>Best Practices</li>
+                    <li>Seller Protection</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Support</h4>
+                <ul class="footer-links">
+                    <li>Help Center</li>
+                    <li>Contact Us</li>
+                    <li>Safety Tips</li>
+                    <li>Community</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 AuctionHub. All rights reserved.
+            <span class="footer-divider">|</span>
+            Privacy Policy
+            <span class="footer-divider">|</span>
+            Terms of Service
+        </div>
+    </footer>
+</div>
+
+<script src="assets/js/ui/renderHeader.js" type="module"></script>
+<script src="assets/js/pages/home.js" type="module"></script>
+<script src="assets/js/pages/heroSearch.js" type="module"></script>
+</body>
+</html>

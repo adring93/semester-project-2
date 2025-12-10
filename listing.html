@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AuctionHub – Listing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View details and bids for a single auction listing.">
+
+    <link rel="stylesheet" href="assets/css/common/base.css">
+    <link rel="stylesheet" href="assets/css/common/layout.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/pages/listing.css">
+</head>
+<body>
+    <div id="app">
+        <header class="site-header">
+            <div class="container header-content">
+                <a href="index.html" class="logo" data-nav="home">AuctionHub</a>
+
+                <nav class="main-nav" aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html" data-nav="home">Home</a></li>
+                        <li><a href="create-listing.html" data-nav="create">Create listing</a></li>
+                        <li><a href="profile.html" data-nav="profile">Profile</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-right">
+                    <div id="userInfo" class="user-info hidden">
+                        <span id="userName" class="user-name"></span>
+                        <span id="userCredits" class="credits"></span>
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </div>
+
+                    <div id="authActions" class="auth-actions">
+                        <a href="auth.html" id="loginLink" class="btn">Login</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="site-main">
+            <div class="container">
+                <a href="index.html" class="back-link">← Back to listings</a>
+
+                <section id="listingDetails" class="listing-details">
+                    <div id="listingLoading" class="loading">Loading listing...</div>
+
+                    <div id="listingContent" class="two-column hidden">
+                        <article class="listing-main">
+                            <div class="listing-image-wrapper">
+                                <img id="listingImage" src="" alt="">
+                            </div>
+
+                            <div class="listing-info">
+                                <h1 id="listingTitle"></h1>
+                                <p id="listingDescription"></p>
+
+                                <div class="listing-meta">
+                                    <p id="listingSeller"></p>
+                                    <p id="listingEnds"></p>
+                                    <p id="listingBidCount"></p>
+                                    <p id="listingHighestBid"></p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <aside class="listing-side">
+                            <section class="bids-section">
+                                <h2>Bids</h2>
+                                <ul id="bidsList" class="bids-list"></ul>
+                                <p id="noBidsMessage" class="no-results hidden">No bids yet.</p>
+                            </section>
+
+                            <section class="bid-form-section">
+                                <h2>Place a bid</h2>
+                                <p id="bidInfoMessage" class="form-info"></p>
+
+                                <form id="bidForm">
+                                    <div class="form-group">
+                                        <label for="bidAmount">Your bid</label>
+                                        <input type="number" id="bidAmount" min="1" required>
+                                    </div>
+                                    <button type="submit" class="btn">Place bid</button>
+                                    <p id="bidError" class="form-error"></p>
+                                </form>
+                            </section>
+                        </aside>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <div id="globalMessage" class="global-message hidden" role="status" aria-live="polite"></div>
+
+        <footer class="site-footer">
+            <div class="container">
+                <p>AuctionHub – Semester Project 2</p>
+            </div>
+        </footer>
+    </div>
+        <script src="assets/js/ui/renderHeader.js" type="module"></script>
+    <script src="assets/js/pages/listingPage.js" type="module"></script>
+</body>
+</html>
+
+

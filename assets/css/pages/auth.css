@@ -1,0 +1,35 @@
+.hero-auth {
+    max-width: 560px;
+    margin: 1.5rem auto 1.75rem;
+    text-align: center;
+}
+
+.hero-auth .hero-title {
+    font-size: 1.6rem;
+}
+
+.auth-tabs {
+    max-width: 480px;
+    margin: 0 auto 0.75rem;
+}
+
+.auth-panel {
+    max-width: 480px;
+    margin: 0 auto 1rem;
+}
+
+.auth-tab {
+    flex: 1;
+    text-align: center;
+}
+
+.auth-tab.active {
+    border-color: var(--accent);
+    background: var(--bg-surface);
+}
+
+@media (max-width: 640px) {
+    .hero-auth .hero-title {
+        font-size: 1.4rem;
+    }
+}

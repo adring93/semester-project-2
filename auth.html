@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AuctionHub – Login / Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Log in or register to start bidding and listing items on AuctionHub.">
+
+    <link rel="stylesheet" href="assets/css/common/base.css">
+    <link rel="stylesheet" href="assets/css/common/layout.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/pages/auth.css">
+</head>
+<body>
+<div id="app">
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo" data-nav="home">AuctionHub</a>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <ul>
+                    <li><a href="index.html" data-nav="home">Home</a></li>
+                    <li><a href="create-listing.html" data-nav="create">Create listing</a></li>
+                    <li><a href="profile.html" data-nav="profile">Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-right">
+                <div id="userInfo" class="user-info hidden">
+                    <span id="userName" class="user-name"></span>
+                    <span id="userCredits" class="credits"></span>
+                    <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                </div>
+
+                <div id="authActions" class="auth-actions">
+                    <a href="auth.html" id="loginLink" class="btn">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <div class="container auth-page">
+            <section class="hero hero-auth">
+                <h1 class="hero-title">Welcome to AuctionHub</h1>
+                <p class="hero-text">
+                    Create an account with your <strong>@stud.noroff.no</strong> email or log in to start bidding and listing items.
+                </p>
+            </section>
+
+            <div class="auth-tabs" role="tablist">
+                <button
+                    type="button"
+                    class="auth-tab active"
+                    data-tab="login"
+                    id="loginTab"
+                    aria-selected="true"
+                >
+                    Login
+                </button>
+                <button
+                    type="button"
+                    class="auth-tab"
+                    data-tab="register"
+                    id="registerTab"
+                    aria-selected="false"
+                >
+                    Register
+                </button>
+            </div>
+
+            <section class="auth-panel" aria-labelledby="loginTab" id="loginPanel">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            required
+                            placeholder="name@stud.noroff.no"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            minlength="8"
+                            required
+                        >
+                    </div>
+                    <p class="form-info">
+                        Use the credentials you registered with earlier.
+                    </p>
+                    <p class="form-error hidden" id="loginError"></p>
+                    <button type="submit" class="btn" id="loginSubmit">Login</button>
+                </form>
+            </section>
+
+            <section class="auth-panel hidden" aria-labelledby="registerTab" id="registerPanel">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Username</label>
+                        <input
+                            type="text"
+                            id="registerName"
+                            required
+                            pattern="^[A-Za-z0-9_]+$"
+                            placeholder="username"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input
+                            type="email"
+                            id="registerEmail"
+                            required
+                            placeholder="name@stud.noroff.no"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            minlength="8"
+                            required
+                        >
+                    </div>
+                    <p class="form-info">
+                        Username may only contain letters, numbers and underscore.
+                        Email must be a valid <strong>@stud.noroff.no</strong> address.
+                    </p>
+                    <p class="form-error hidden" id="registerError"></p>
+                    <button type="submit" class="btn" id="registerSubmit">Create account</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-bottom">
+            <p>© 2024 AuctionHub. Semester Project 2.</p>
+        </div>
+    </footer>
+</div>
+    <script src="assets/js/ui/renderHeader.js" type="module"></script>
+    <script src="assets/js/pages/authPage.js" type="module"></script>
+</body>
+</html>
+

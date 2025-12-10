@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AuctionHub – Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View and manage your AuctionHub profile, listings and bids.">
+
+    <link rel="stylesheet" href="assets/css/common/base.css">
+    <link rel="stylesheet" href="assets/css/common/layout.css">
+    <link rel="stylesheet" href="assets/css/common/components.css">
+    <link rel="stylesheet" href="assets/css/pages/profile.css">
+</head>
+<body>
+    <div id="app">
+        <header class="site-header">
+            <div class="container header-content">
+                <a href="index.html" class="logo" data-nav="home">AUCTIONHUB</a>
+
+                <nav class="main-nav" aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html" data-nav="home">Home</a></li>
+                        <li><a href="create-listing.html" data-nav="create">Create listing</a></li>
+                        <li><a href="profile.html" data-nav="profile">Profile</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-right">
+                    <div id="userInfo" class="user-info hidden">
+                        <span id="userName" class="user-name"></span>
+                        <span id="userCredits" class="credits"></span>
+                        <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                    </div>
+
+                    <div id="authActions" class="auth-actions">
+                        <a href="auth.html" id="loginLink" class="btn">Login</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="site-main">
+            <div class="container">
+                <section class="profile-layout">
+                    <aside class="profile-sidebar">
+                        <div class="profile-banner-wrapper">
+                            <img id="profileBanner" class="profile-banner" src="" alt="">
+                        </div>
+
+                        <div class="profile-main-card">
+                            <div class="profile-avatar-row">
+                                <img id="profileAvatar" class="profile-avatar" src="" alt="">
+                                <div class="profile-name-block">
+                                    <h1 id="profileName" class="profile-name"></h1>
+                                    <p id="profileEmail" class="profile-email"></p>
+                                </div>
+                            </div>
+
+                            <p id="profileBio" class="profile-bio"></p>
+                            <p id="profileCredits" class="profile-credits"></p>
+                        </div>
+                    </aside>
+
+                    <section class="profile-content">
+                        <section class="profile-section">
+                            <div class="profile-section-header">
+                                <h2>Your listings</h2>
+                            </div>
+                            <p id="noListingsMessage" class="profile-empty">You do not have any listings yet.</p>
+                            <ul id="profileListings" class="profile-list"></ul>
+                        </section>
+
+                        <section class="profile-section">
+                            <div class="profile-section-header">
+                                <h2>Your bids</h2>
+                            </div>
+                            <p id="noBidsMessage" class="profile-empty">You have not placed any bids yet.</p>
+                            <ul id="profileBids" class="profile-list"></ul>
+                        </section>
+
+                        <section class="profile-section">
+                            <div class="profile-section-header">
+                                <h2>Update profile</h2>
+                            </div>
+
+                            <form id="profileUpdateForm" class="profile-form">
+                                <div class="form-group">
+                                    <label for="updateBio">Bio</label>
+                                    <textarea id="updateBio" rows="3"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateAvatarUrl">Avatar URL</label>
+                                    <input id="updateAvatarUrl" type="url">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="updateBannerUrl">Banner URL</label>
+                                    <input id="updateBannerUrl" type="url">
+                                </div>
+
+                                <p id="profileUpdateError" class="form-error"></p>
+                                <p id="profileUpdateSuccess" class="form-success"></p>
+
+                                <button type="submit" class="btn">Save changes</button>
+                            </form>
+                        </section>
+                    </section>
+                </section>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-bottom">
+                    <p>AuctionHub – Semester Project 2</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/ui/renderHeader.js" type="module"></script>
+    <script src="assets/js/pages/profilePage.js" type="module"></script>
+</body>
+</html>
