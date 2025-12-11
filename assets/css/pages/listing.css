@@ -53,29 +53,10 @@
     font-size: 0.9rem;
 }
 
-.listing-meta-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-}
-
-.listing-meta-label {
-    color: #6b7280;
-}
-
-.listing-meta-value {
-    font-weight: 500;
-    color: #111827;
-}
-
-/* gjør current bid litt tydeligere */
-
 .listing-meta-current {
     font-weight: 600;
     color: #1d4ed8;
 }
-
-/* bids */
 
 .bids-section h2,
 .bid-form-section h2 {
@@ -117,16 +98,12 @@
     color: #6b7280;
 }
 
-/* din egen bruker som bidder */
-
 .bid-bidder-self {
     color: #1d4ed8;
     font-weight: 600;
     cursor: pointer;
     text-decoration: underline;
 }
-
-/* bid form */
 
 .bid-form-section {
     margin-top: 1rem;
@@ -159,8 +136,6 @@
     margin-top: 0.25rem;
 }
 
-/* "Listing not found" */
-
 .listing-error-box {
     background: #fef2f2;
     border: 1px solid #fee2e2;
@@ -170,8 +145,6 @@
     margin-top: 1rem;
     font-size: 0.95rem;
 }
-
-/* responsive */
 
 @media (max-width: 900px) {
     .listing-image-wrapper img {
