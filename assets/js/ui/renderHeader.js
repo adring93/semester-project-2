@@ -41,7 +41,7 @@ function initHeaderAuth() {
         if (logoutBtn) {
             logoutBtn.addEventListener("click", () => {
                 clearAuth();
-                window.location.href = "index.html";
+                location.replace("index.html");
             });
         }
     } else {

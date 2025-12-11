@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+      (function () {
+        try {
+          const raw = localStorage.getItem('auctionhub_auth');
+          if (!raw) return location.replace('auth.html');
+          const auth = JSON.parse(raw);
+          if (!auth || !auth.accessToken || !auth.name) return location.replace('auth.html');
+        } catch (err) {
+          location.replace('auth.html');
+        }
+      })();
+    </script>
     <title>AuctionHub – Create listing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Create a new auction listing on AuctionHub.">
@@ -24,42 +36,35 @@
                     <li><a href="profile.html" data-nav="profile">Profile</a></li>
                 </ul>
             </nav>
-
             <div class="header-right">
                 <div id="userInfo" class="user-info hidden">
                     <span id="userName" class="user-name"></span>
                     <span id="userCredits" class="credits"></span>
                     <button id="logoutBtn" class="btn btn-secondary">Logout</button>
                 </div>
-
                 <div id="authActions" class="auth-actions">
                     <a href="auth.html" id="loginLink" class="btn">Login</a>
                 </div>
             </div>
         </div>
     </header>
-
     <main class="site-main">
         <div class="container">
             <a href="index.html" class="back-link">← Back to listings</a>
-
             <section class="page-header">
                 <h1>Create a new listing</h1>
                 <p>Fill in the details below and publish a new auction listing.</p>
             </section>
-
             <section class="form-section">
                 <form id="createListingForm" class="form">
                     <div class="form-group">
                         <label for="listingTitle">Title</label>
                         <input id="listingTitle" type="text" required maxlength="80">
                     </div>
-
                     <div class="form-group">
                         <label for="listingDescription">Description</label>
                         <textarea id="listingDescription" rows="4" maxlength="500"></textarea>
                     </div>
-
                     <div class="form-group">
                         <label for="listingMedia">Image URL</label>
                         <input
@@ -70,7 +75,6 @@
                             Must be a valid and publicly accessible image URL.
                         </p>
                     </div>
-
                     <div class="form-group">
                         <label for="listingTags">Tags</label>
                         <input
@@ -81,7 +85,6 @@
                             Optional. Separate tags with commas.
                         </p>
                     </div>
-
                     <div class="form-group">
                         <label for="listingEndsAt">Ends at</label>
                         <input id="listingEndsAt" type="datetime-local" required>
@@ -89,10 +92,8 @@
                             The auction must end in the future.
                         </p>
                     </div>
-
                     <p id="createListingError" class="form-error"></p>
                     <p id="createListingSuccess" class="form-success"></p>
-
                     <button type="submit" class="btn" id="createListingSubmit">
                         Publish listing
                     </button>
@@ -100,7 +101,6 @@
             </section>
         </div>
     </main>
-
     <footer class="site-footer">
         <div class="container">
             <p>AuctionHub – Semester Project 2</p>

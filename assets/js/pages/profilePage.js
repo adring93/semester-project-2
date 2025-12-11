@@ -20,16 +20,14 @@ const updateAvatarInput = document.getElementById("updateAvatarUrl");
 const updateBannerInput = document.getElementById("updateBannerUrl");
 const updateErrorEl = document.getElementById("profileUpdateError");
 const updateSuccessEl = document.getElementById("profileUpdateSuccess");
-
 function ensureAuthenticated() {
     const auth = getAuth();
     if (!auth || !auth.accessToken || !auth.name) {
-        window.location.href = "auth.html";
+        location.replace("auth.html");
         return null;
     }
     return auth;
 }
-
 function renderProfile(profile) {
     if (nameEl) nameEl.textContent = profile.name || "";
     if (emailEl) emailEl.textContent = profile.email || "";

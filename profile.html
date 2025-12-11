@@ -5,7 +5,18 @@
     <title>AuctionHub – Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="View and manage your AuctionHub profile, listings and bids.">
-
+<script>
+  (function () {
+    try {
+      const raw = localStorage.getItem('auctionhub_auth'); 
+      if (!raw) return location.replace('auth.html');
+      const auth = JSON.parse(raw);
+      if (!auth || !auth.accessToken || !auth.name) return location.replace('auth.html');
+    } catch (err) {
+      location.replace('auth.html');
+    }
+  })();
+</script>
     <link rel="stylesheet" href="assets/css/common/base.css">
     <link rel="stylesheet" href="assets/css/common/layout.css">
     <link rel="stylesheet" href="assets/css/common/components.css">
