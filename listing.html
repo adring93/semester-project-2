@@ -15,8 +15,7 @@
     <div id="app">
         <header class="site-header">
             <div class="container header-content">
-                <a href="index.html" class="logo" data-nav="home">AuctionHub</a>
-
+                <a href="index.html" class="logo" data-nav="home">AUCTIONHUB</a>
                 <nav class="main-nav" aria-label="Main navigation">
                     <ul>
                         <li><a href="index.html" data-nav="home">Home</a></li>
@@ -24,7 +23,6 @@
                         <li><a href="profile.html" data-nav="profile">Profile</a></li>
                     </ul>
                 </nav>
-
                 <div class="header-right">
                     <div id="userInfo" class="user-info hidden">
                         <span id="userName" class="user-name"></span>
@@ -38,7 +36,6 @@
                 </div>
             </div>
         </header>
-
         <main class="site-main">
             <div class="container">
                 <a href="index.html" class="back-link">← Back to listings</a>
@@ -51,11 +48,9 @@
                             <div class="listing-image-wrapper">
                                 <img id="listingImage" src="" alt="">
                             </div>
-
                             <div class="listing-info">
                                 <h1 id="listingTitle"></h1>
                                 <p id="listingDescription"></p>
-
                                 <div class="listing-meta">
                                     <p id="listingSeller"></p>
                                     <p id="listingEnds"></p>
@@ -64,18 +59,15 @@
                                 </div>
                             </div>
                         </article>
-
                         <aside class="listing-side">
                             <section class="bids-section">
                                 <h2>Bids</h2>
                                 <ul id="bidsList" class="bids-list"></ul>
                                 <p id="noBidsMessage" class="no-results hidden">No bids yet.</p>
                             </section>
-
                             <section class="bid-form-section">
                                 <h2>Place a bid</h2>
                                 <p id="bidInfoMessage" class="form-info"></p>
-
                                 <form id="bidForm">
                                     <div class="form-group">
                                         <label for="bidAmount">Your bid</label>
@@ -84,25 +76,25 @@
                                     <button type="submit" class="btn">Place bid</button>
                                     <p id="bidError" class="form-error"></p>
                                 </form>
-                                <button id="deleteListingBtn" class="btn btn-danger hidden">Delete listing</button>
+                                <button type="button" id="deleteListingBtn" class="btn btn-secondary hidden">
+                                    Delete listing
+                                </button>
                             </section>
                         </aside>
                     </div>
                 </section>
             </div>
         </main>
-
         <div id="globalMessage" class="global-message hidden" role="status" aria-live="polite"></div>
-
         <footer class="site-footer">
             <div class="container">
-                <p>AuctionHub – Semester Project 2</p>
+                <div class="footer-bottom">
+                    <p>AuctionHub – Semester Project 2</p>
+                </div>
             </div>
         </footer>
     </div>
-        <script src="assets/js/ui/renderHeader.js" type="module"></script>
+    <script src="assets/js/ui/renderHeader.js" type="module"></script>
     <script src="assets/js/pages/listingPage.js" type="module"></script>
 </body>
 </html>
-
-

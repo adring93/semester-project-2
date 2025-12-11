@@ -1,87 +1,146 @@
-import { fetchListingById, placeBid } from "../api/listingApi.js";
+import { fetchListingById, placeBid, deleteListing } from "../api/listingApi.js";
 import { getAuth } from "../storage/authStorage.js";
 
 const listingLoading = document.getElementById("listingLoading");
 const listingContent = document.getElementById("listingContent");
-const listingSection = document.getElementById("listingDetails");
+const listingDetailsSection = document.getElementById("listingDetails");
 
-const imgEl = document.getElementById("listingImage");
-const titleEl = document.getElementById("listingTitle");
-const descEl = document.getElementById("listingDescription");
-const sellerEl = document.getElementById("listingSeller");
-const endsEl = document.getElementById("listingEnds");
-const bidCountEl = document.getElementById("listingBidCount");
-const highestBidEl = document.getElementById("listingHighestBid");
+const listingImage = document.getElementById("listingImage");
+const listingTitle = document.getElementById("listingTitle");
+const listingDescription = document.getElementById("listingDescription");
+const listingSeller = document.getElementById("listingSeller");
+const listingEnds = document.getElementById("listingEnds");
+const listingBidCount = document.getElementById("listingBidCount");
+const listingHighestBid = document.getElementById("listingHighestBid");
 
 const bidsList = document.getElementById("bidsList");
 const noBidsMessage = document.getElementById("noBidsMessage");
 
 const bidForm = document.getElementById("bidForm");
-const bidInput = document.getElementById("bidAmount");
+const bidAmountInput = document.getElementById("bidAmount");
 const bidError = document.getElementById("bidError");
-const bidInfo = document.getElementById("bidInfoMessage");
+const bidInfoMessage = document.getElementById("bidInfoMessage");
 
-let listing = null;
+const deleteBtn = document.getElementById("deleteListingBtn");
 
-function getQueryId() {
-    return new URLSearchParams(location.search).get("id");
+let currentListing = null;
+
+function getListingIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
 }
 
-function toggleLoading(show) {
-    listingLoading.classList.toggle("hidden", !show);
-    listingContent.classList.toggle("hidden", show);
+function setLoading(isLoading) {
+    if (listingLoading) {
+        listingLoading.classList.toggle("hidden", !isLoading);
+    }
+    if (listingContent) {
+        listingContent.classList.toggle("hidden", isLoading);
+    }
 }
 
-function fmt(d) {
-    const date = new Date(d);
-    return Number.isNaN(date) ? "" : date.toLocaleString();
+function formatDate(value) {
+    if (!value) return "";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleString();
 }
 
-function highestBid(listing) {
-    if (!Array.isArray(listing.bids)) return 0;
-    return listing.bids.reduce((max, b) => (b.amount > max ? b.amount : max), 0);
+function getHighestBidAmount(listing) {
+    if (!listing || !Array.isArray(listing.bids) || listing.bids.length === 0) {
+        return 0;
+    }
+    return listing.bids.reduce((max, bid) => {
+        return bid.amount > max ? bid.amount : max;
+    }, 0);
 }
 
-function showNotFound(msg) {
-    listingSection.innerHTML = `
+function renderNotFound(message) {
+    if (!listingDetailsSection) return;
+
+    if (listingLoading) listingLoading.classList.add("hidden");
+    if (listingContent) listingContent.classList.add("hidden");
+
+    listingDetailsSection.innerHTML = `
         <div class="listing-error-box">
-            <p>${msg}</p>
-            <p><a href="index.html">Go back</a></p>
+            <p>${message || "Listing not found."}</p>
+            <p><a href="index.html">Go back to listings</a></p>
         </div>
     `;
 }
 
-function renderListing(data) {
-    listing = data;
+function renderListing(listing) {
+    currentListing = listing;
 
-    const media = Array.isArray(data.media) ? data.media : [];
-    const first = media[0];
+    if (listingImage) {
+        const media = Array.isArray(listing.media) ? listing.media : [];
+        const first = media[0];
+        if (first && first.url) {
+            listingImage.src = first.url;
+            listingImage.alt = first.alt || listing.title || "Listing image";
+        } else {
+            listingImage.src = "assets/img/placeholders/listing-placeholder.png";
+            listingImage.alt = "Listing placeholder";
+        }
+    }
 
-    imgEl.src = first?.url || "assets/img/placeholders/listing-placeholder.png";
-    imgEl.alt = first?.alt || data.title || "";
+    if (listingTitle) listingTitle.textContent = listing.title || "Untitled listing";
 
-    titleEl.textContent = data.title || "Untitled listing";
-    descEl.textContent = data.description || "No description provided.";
+    if (listingDescription) {
+        listingDescription.textContent =
+            listing.description || "No description provided for this listing.";
+    }
 
-    sellerEl.textContent = data.seller?.name ? `Seller: ${data.seller.name}` : "Seller: Unknown";
+    if (listingSeller) {
+        const name = listing.seller && listing.seller.name ? listing.seller.name : "Unknown seller";
+        listingSeller.textContent = `Seller: ${name}`;
+    }
 
-    const ends = fmt(data.endsAt);
-    endsEl.textContent = ends ? `Ends: ${ends}` : "";
+    if (listingEnds) {
+        const endsText = formatDate(listing.endsAt);
+        listingEnds.textContent = endsText ? `Ends: ${endsText}` : "";
+    }
 
-    const count = data._count?.bids ?? data.bids?.length ?? 0;
-    bidCountEl.textContent = `Total bids: ${count}`;
+    const count = listing._count && typeof listing._count.bids === "number"
+        ? listing._count.bids
+        : Array.isArray(listing.bids)
+        ? listing.bids.length
+        : 0;
 
-    const high = highestBid(data);
-    highestBidEl.innerHTML = high
-        ? `Current bid: <strong>$${high}</strong>`
-        : "Current bid: No bids yet";
+    if (listingBidCount) {
+        listingBidCount.textContent = `Total bids: ${count}`;
+    }
+
+    const highest = getHighestBidAmount(listing);
+    if (listingHighestBid) {
+        if (highest > 0) {
+            listingHighestBid.innerHTML = `Current bid: <span class="listing-meta-current">$${highest}</span>`;
+        } else {
+            listingHighestBid.textContent = "Current bid: No bids yet";
+        }
+    }
+
+    const auth = getAuth();
+    const isSeller =
+        auth &&
+        auth.name &&
+        listing.seller &&
+        listing.seller.name === auth.name;
+
+    if (deleteBtn) {
+        deleteBtn.classList.toggle("hidden", !isSeller);
+    }
 }
 
-function renderBids(data) {
+function renderBids(listing) {
+    if (!bidsList || !noBidsMessage) return;
+
     bidsList.innerHTML = "";
 
-    const bids = Array.isArray(data.bids)
-        ? [...data.bids].sort((a, b) => new Date(b.created) - new Date(a.created))
+    const bids = Array.isArray(listing.bids)
+        ? listing.bids.slice().sort((a, b) => {
+              return new Date(a.created) - new Date(b.created);
+          })
         : [];
 
     if (bids.length === 0) {
@@ -92,123 +151,195 @@ function renderBids(data) {
     noBidsMessage.classList.add("hidden");
 
     const auth = getAuth();
-    const username = auth?.name || null;
+    const authName = auth && auth.name ? auth.name : null;
 
-    bids.forEach((b) => {
+    bids.forEach((bid) => {
         const li = document.createElement("li");
         li.className = "bid-item";
 
         const left = document.createElement("div");
         left.className = "bid-left";
 
-        const amount = document.createElement("div");
-        amount.className = "bid-amount";
-        amount.textContent = `$${b.amount}`;
+        const amountEl = document.createElement("div");
+        amountEl.className = "bid-amount";
+        amountEl.textContent = `$${bid.amount}`;
 
-        const meta = document.createElement("div");
-        meta.className = "bid-meta";
+        const bidderName = bid.bidder && bid.bidder.name ? bid.bidder.name : "Unknown";
+        const createdText = formatDate(bid.created);
 
-        const name = b.bidder?.name || "Unknown";
-        const date = fmt(b.created);
+        const metaEl = document.createElement("div");
+        metaEl.className = "bid-meta";
 
-        if (username && name === username) {
-            const you = document.createElement("span");
-            you.className = "bid-bidder-self";
-            you.textContent = name;
-            you.addEventListener("click", () => (location.href = "profile.html"));
-            meta.appendChild(you);
+        if (authName && bidderName === authName) {
+            const span = document.createElement("span");
+            span.textContent = bidderName;
+            span.className = "bid-bidder-self";
+            span.addEventListener("click", () => {
+                window.location.href = "profile.html";
+            });
+            metaEl.appendChild(span);
         } else {
-            meta.textContent = name;
+            metaEl.textContent = bidderName;
         }
 
-        if (date) {
-            const t = document.createElement("span");
-            t.textContent = ` • ${date}`;
-            meta.appendChild(t);
+        if (createdText) {
+            const timeSpan = document.createElement("span");
+            timeSpan.textContent = ` • ${createdText}`;
+            metaEl.appendChild(timeSpan);
         }
 
-        left.appendChild(amount);
-        left.appendChild(meta);
+        left.appendChild(amountEl);
+        left.appendChild(metaEl);
+
         li.appendChild(left);
         bidsList.appendChild(li);
     });
 }
 
-function updateBidInfo() {
+function updateBidInfoMessage() {
+    if (!bidInfoMessage) return;
+
     const auth = getAuth();
-
-    if (!auth) {
-        bidInfo.textContent = "Log in with your @stud.noroff.no account to place a bid.";
+    if (!auth || !auth.name) {
+        bidInfoMessage.textContent = "Log in with your @stud.noroff.no account to place a bid.";
         return;
     }
 
-    if (listing?.seller?.name === auth.name) {
-        bidInfo.textContent = "You cannot bid on your own listing.";
+    if (!currentListing || !currentListing.seller) {
+        bidInfoMessage.textContent = "";
         return;
     }
 
-    bidInfo.textContent = "Enter a bid higher than the current price.";
+    if (currentListing.seller.name === auth.name) {
+        bidInfoMessage.textContent = "You are the seller of this listing and cannot bid on it.";
+        return;
+    }
+
+    bidInfoMessage.textContent = "Enter an amount higher than the current bid to place your bid.";
 }
 
-async function load() {
-    const id = getQueryId();
-    if (!id) return showNotFound("No listing ID provided.");
+async function loadListing() {
+    const id = getListingIdFromUrl();
 
-    toggleLoading(true);
+    if (!id) {
+        renderNotFound("No listing ID provided.");
+        return;
+    }
+
+    setLoading(true);
 
     try {
-        const data = await fetchListingById(id);
-        if (!data?.id) return showNotFound("Listing not found.");
+        const listing = await fetchListingById(id);
+        if (!listing || !listing.id) {
+            renderNotFound("Listing could not be found.");
+            return;
+        }
 
-        renderListing(data);
-        renderBids(data);
-        updateBidInfo();
-
-        toggleLoading(false);
-    } catch {
-        showNotFound("Could not load this listing.");
+        renderListing(listing);
+        renderBids(listing);
+        updateBidInfoMessage();
+        setLoading(false);
+    } catch (error) {
+        renderNotFound("Could not load this listing.");
     }
 }
 
-async function submitBid(e) {
-    e.preventDefault();
+async function handleBidSubmit(event) {
+    event.preventDefault();
+
+    if (!bidError) return;
+
     bidError.textContent = "";
 
     const auth = getAuth();
-    if (!auth) {
-        bidError.textContent = "You must be logged in to bid.";
+    if (!auth || !auth.accessToken) {
+        bidError.textContent = "You must be logged in to place a bid.";
         return;
     }
 
-    if (listing?.seller?.name === auth.name) {
+    if (!currentListing) {
+        bidError.textContent = "Listing is not loaded yet.";
+        return;
+    }
+
+    if (currentListing.seller && currentListing.seller.name === auth.name) {
         bidError.textContent = "You cannot bid on your own listing.";
         return;
     }
 
-    if (new Date(listing.endsAt) < new Date()) {
+    const now = new Date();
+    const ends = currentListing.endsAt ? new Date(currentListing.endsAt) : null;
+    if (ends && now > ends) {
         bidError.textContent = "This listing has already ended.";
         return;
     }
 
-    const amount = Number(bidInput.value);
-    if (!amount || amount <= highestBid(listing)) {
-        bidError.textContent = "Bid must be higher than the current bid.";
+    const rawAmount = bidAmountInput ? bidAmountInput.value : "";
+    const amount = Number(rawAmount);
+
+    if (!amount || Number.isNaN(amount) || amount <= 0) {
+        bidError.textContent = "Please enter a valid bid amount.";
+        return;
+    }
+
+    const highest = getHighestBidAmount(currentListing);
+    if (amount <= highest) {
+        bidError.textContent = `Bid must be higher than the current bid ($${highest}).`;
         return;
     }
 
     try {
-        await placeBid(listing.id, amount);
-        bidInput.value = "";
+        await placeBid(currentListing.id, amount);
+        bidAmountInput.value = "";
+        bidError.textContent = "";
 
-        const updated = await fetchListingById(listing.id);
-        renderListing(updated);
-        renderBids(updated);
-        listing = updated;
-        updateBidInfo();
-    } catch (err) {
-        bidError.textContent = err.message || "Could not place bid.";
+        const updated = await fetchListingById(currentListing.id);
+        if (updated && updated.id) {
+            renderListing(updated);
+            renderBids(updated);
+            currentListing = updated;
+            updateBidInfoMessage();
+        }
+    } catch (error) {
+        bidError.textContent = error.message || "Could not place bid.";
     }
 }
 
-if (bidForm) bidForm.addEventListener("submit", submitBid);
-load();
+async function handleDeleteClick() {
+    if (!currentListing || !currentListing.id) return;
+
+    const auth = getAuth();
+    if (!auth || !auth.accessToken || !auth.name) {
+        alert("You must be logged in as the seller to delete this listing.");
+        return;
+    }
+
+    if (!currentListing.seller || currentListing.seller.name !== auth.name) {
+        alert("Only the seller can delete this listing.");
+        return;
+    }
+
+    const confirmed = confirm("Delete this listing? This can not be undone.");
+    if (!confirmed) return;
+
+    try {
+        await deleteListing(currentListing.id);
+        window.location.href = "index.html";
+    } catch (error) {
+        if (bidError) {
+            bidError.textContent = error.message || "Could not delete listing.";
+        } else {
+            alert(error.message || "Could not delete listing.");
+        }
+    }
+}
+
+if (bidForm) {
+    bidForm.addEventListener("submit", handleBidSubmit);
+}
+
+if (deleteBtn) {
+    deleteBtn.addEventListener("click", handleDeleteClick);
+}
+
+loadListing();
