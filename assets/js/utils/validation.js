@@ -1,12 +1,7 @@
-export function validateEmail(email) {
-    return typeof email === "string" && email.includes("@") && email.length > 5;
-}
-
 export function validateNoroffEmail(email) {
-    return (
-        typeof email === "string" &&
-        (email.endsWith("@stud.noroff.no") || email.endsWith("@noroff.no"))
-    );
+    if (typeof email !== "string") return false;
+    const value = email.trim().toLowerCase();
+    return value.endsWith("@stud.noroff.no") || value.endsWith("@noroff.no");
 }
 
 export function validatePassword(password) {
@@ -14,9 +9,10 @@ export function validatePassword(password) {
 }
 
 export function validateImageUrl(url) {
+    if (typeof url !== "string") return false;
     try {
-        new URL(url);
-        return true;
+        const parsed = new URL(url.trim());
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
     } catch {
         return false;
     }
@@ -28,5 +24,5 @@ export function validateTitle(title) {
 
 export function validateFutureDate(dateString) {
     const date = new Date(dateString);
-    return date instanceof Date && !isNaN(date) && date > new Date();
+    return Number.isFinite(date.getTime()) && date.getTime() > Date.now();
 }

@@ -1,16 +1,14 @@
 export function formatCurrency(amount) {
-    if (typeof amount !== "number" || Number.isNaN(amount)) {
-        return "$0";
-    }
-    return `$${amount.toLocaleString("en-US")}`;
+    const num = Number(amount);
+    if (!Number.isFinite(num)) return "$0";
+    return `$${num.toLocaleString("en-US")}`;
 }
 
 export function formatTimeRemaining(endsAt) {
     const end = new Date(endsAt);
-    const now = new Date();
-    const diffMs = end.getTime() - now.getTime();
+    const diffMs = end.getTime() - Date.now();
 
-    if (Number.isNaN(end.getTime()) || diffMs <= 0) {
+    if (!Number.isFinite(end.getTime()) || diffMs <= 0) {
         return "Ended";
     }
 
